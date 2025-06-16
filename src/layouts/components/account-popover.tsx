@@ -3,16 +3,18 @@ import type { IconButtonProps } from '@mui/material/IconButton';
 import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
-import Popover from '@mui/material/Popover';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import Popover from '@mui/material/Popover';
 import MenuList from '@mui/material/MenuList';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
 import { useRouter, usePathname } from 'src/routes/hooks';
+
+import { logout } from 'src/utils/auth';
 
 import { _myAccount } from 'src/_mock';
 
@@ -129,7 +131,7 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Box sx={{ p: 1 }}>
-          <Button fullWidth color="error" size="medium" variant="text">
+          <Button fullWidth color="error" onClick={logout} size="medium" variant="text">
             Logout
           </Button>
         </Box>

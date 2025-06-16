@@ -15,18 +15,18 @@ export type NavItem = {
 export const navData = [
   {
     title: 'Dashboard',
-    path: '/',
+    path: '/dashboard',
     icon: icon('ic-analytics'),
   },
   {
-    title: 'User',
-    path: '/user',
+    title: 'Super Admin',
+    path: '/dashboard/user', 
     icon: icon('ic-user'),
   },
   {
-    title: 'Product',
-    path: '/products',
-    icon: icon('ic-cart'),
+    title: 'Company',
+    path: '/dashboard/company', 
+    icon: icon('ic-office-building'),
     info: (
       <Label color="error" variant="inverted">
         +3
@@ -34,13 +34,13 @@ export const navData = [
     ),
   },
   {
-    title: 'Blog',
-    path: '/blog',
-    icon: icon('ic-blog'),
+    title: 'Request',
+    path: '/dashboard/request',
+    icon: icon('ic-request'),
   },
   {
     title: 'Sign in',
-    path: '/sign-in',
+    path: '/',
     icon: icon('ic-lock'),
   },
   {
