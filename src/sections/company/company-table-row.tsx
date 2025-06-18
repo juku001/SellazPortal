@@ -37,7 +37,7 @@ type CompanyTableRowProps = {
   row: CompanyProps;
   selected: boolean;
   onSelectRow: () => void;
-  onShowDetails: (company: CompanyProps) => void;
+  onShowrequest: (company: CompanyProps) => void;
   onEdit: (company: CompanyProps) => void;
   onDelete?: (id: string) => void;
 };
@@ -46,7 +46,7 @@ export function CompanyTableRow({
   row,
   selected,
   onSelectRow,
-  onShowDetails,
+  onShowrequest,
   onEdit,
   onDelete,
 }: CompanyTableRowProps) {
@@ -149,6 +149,11 @@ export function CompanyTableRow({
           >
             <Iconify icon="solar:eye-bold" />
             Show
+          </MenuItem>
+
+          <MenuItem onClick={() => onShowrequest(row)}>
+          <Iconify icon="solar:document-bold" />
+            Requests
           </MenuItem>
 
           <MenuItem

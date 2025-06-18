@@ -37,8 +37,8 @@ export function CompanyView() {
   const [filterName, setFilterName] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
-  const [openViewModal, setOpenViewModal] = useState(false);
-  const [selectedCompany, setSelectedCompany] = useState<CompanyProps | null>(null);
+  const [openRequestModal, setOpenRequestModal] = useState(false);
+  const [selectedRequests, setSelectedRequests] = useState<any[]>([]);
   const [editingCompanyId, setEditingCompanyId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<Partial<CompanyProps>>({
@@ -106,16 +106,20 @@ export function CompanyView() {
 
   const handleCloseEditModal = () => setOpenEditModal(false);
 
-  const handleOpenViewModal = (company: CompanyProps) => {
-    setSelectedCompany(company);
-    setOpenViewModal(true);
+  const handleOpenRequestModal = async (companyId: string) => {
+    try {
+      const response = await axios.get(`/orders/requests/${companyId}`);
+      setSelectedRequests(response.data.data || []);
+      setOpenRequestModal(true);
+    } catch (error) {
+      console.error('Failed to fetch requests:', error);
+    }
   };
 
-  const handleCloseViewModal = () => {
-    setOpenViewModal(false);
-    setSelectedCompany(null);
-  };
+  const handleCloseRequestModal = () => setOpenRequestModal(false);
 
+
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -245,7 +249,7 @@ export function CompanyView() {
                       row={row}
                       selected={table.selected.includes(row.id)}
                       onSelectRow={() => table.onSelectRow(row.id)}
-                      onShowDetails={handleOpenViewModal}
+                      onShowrequest={(company) =>handleOpenRequestModal(company.id)}
                       onEdit={() => handleOpenEditModal(row)}
                       onDelete={() => handleDeletecompany(row.id)}
                     />
@@ -294,6 +298,34 @@ export function CompanyView() {
         <DialogActions>
           <Button onClick={openModal ? handleCloseModal : handleCloseEditModal}>Cancel</Button>
           <Button variant="contained" onClick={handleSubmit}>Save</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openRequestModal} onClose={handleCloseRequestModal} fullWidth maxWidth="md">
+        <DialogTitle>Superdealer Request List</DialogTitle>
+        <DialogContent dividers>
+          <Table size="small">
+            <TableBody>
+              {selectedRequests.map((request, index) => (
+                <tr key={index}>
+                  <td>{request.name}</td>
+                  <td>{request.brand}</td>
+                  <td>{request.total_amount}</td>
+                  <td>{request.company_price}</td>
+                  <td>{request.date_to_pay}</td>
+
+                </tr>
+              ))}
+              {!selectedRequests.length && (
+                <tr>
+                  <td colSpan={3}>No requests found for this Company.</td>
+                </tr>
+              )}
+            </TableBody>
+          </Table>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseRequestModal}>Close</Button>
         </DialogActions>
       </Dialog>
     </DashboardContent>

@@ -1,9 +1,11 @@
+import axios from 'src/utils/axios';
+
 import {
   _id,
   _price,
   _times,
-  _company,
   _boolean,
+  _company,
   _fullName,
   _taskNames,
   _postTitles,
@@ -207,4 +209,30 @@ export const _notifications = [
     postedAt: _times(5),
     isUnRead: false,
   },
-];
+  ];
+
+  
+  export async function fetchNotificationsFromAPI() {
+    try {
+      const response = await axios.get('/orders/requests?status=pending');
+      const data = response.data?.data ?? [];
+  
+      return data.map((item: any) => ({
+        id: String(item.id),
+        title: item.name || 'New Order',
+        description: `${item.brand} - ${item.total_amount} TZS`,
+        avatarUrl: null,
+        type: 'order',
+        postedAt: item.date_to_pay || new Date().toISOString(), // ✅ always a string
+        isUnRead: true,
+      }));
+    } catch (error) {
+      console.error('Failed to fetch notifications:', error);
+      return _notifications.map((item) => ({
+        ...item,
+        postedAt: String(item.postedAt), // ✅ convert mock too
+      }));
+    }
+  }
+  
+  

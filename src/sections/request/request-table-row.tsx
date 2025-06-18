@@ -1,51 +1,48 @@
 import { useState, useCallback } from 'react';
 
-import { menuItemClasses } from '@mui/material/MenuItem';
 import {
-  Box,
   Popover,
   Checkbox,
   MenuItem,
   MenuList,
   TableRow,
   TableCell,
-  IconButton,
+  IconButton
 } from '@mui/material';
 
-import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 
-// ----------------------------------------------------------------------
-
 export type RequestProps = {
-  id: string;
+  id: number;
   name: string;
-  email: string;
-  phone: string;
-  Requestname: string;
-  role: string;
-  status: string;
-  logo: string;
-  color: string;
+  brand: string;
+  total_amount: number;
+  company_price: number;
+  date_to_pay: string;
+  company: {
+    id: number;
+    name: string;
+  };
+  super_dealer: {
+    id: number;
+    name: string;
+    company: {
+      id: number;
+      name: string;
+    };
+  };
 };
 
 type RequestTableRowProps = {
   row: RequestProps;
   selected: boolean;
   onSelectRow: () => void;
-  onShowDetails: (request: RequestProps) => void;
-  onEdit: (request: RequestProps) => void; // ✅ new
-  //onDelete: (id: string) => void; // ✅ new
 };
-
 
 export function RequestTableRow({
   row,
   selected,
   onSelectRow,
-  onShowDetails,
-  onEdit,
- // onDelete,
 }: RequestTableRowProps) {
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
@@ -57,43 +54,32 @@ export function RequestTableRow({
     setOpenPopover(null);
   }, []);
 
-  const handleShowDetails = () => {
-    onShowDetails(row);
+  const handleApprove = () => {
+    console.log(`Approving request #${row.id}`);
+    // Make API call here
+    handleClosePopover();
+  };
+
+  const handleFulfill = () => {
+    console.log(`Fulfilling request #${row.id}`);
+    // Make API call here
     handleClosePopover();
   };
 
   return (
     <>
-      <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
+      <TableRow hover selected={selected}>
         <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
         </TableCell>
 
-        <TableCell>
-          <Box
-            component="img"
-            src={row.logo}
-            alt={row.name}
-            sx={{
-              width: 40,
-              height: 40,
-              borderRadius: 1,
-              objectFit: 'cover',
-            }}
-          />
-        </TableCell>
-
         <TableCell>{row.name}</TableCell>
-        <TableCell>{row.email}</TableCell>
-        <TableCell>{row.phone}</TableCell>
-        <TableCell>{row.Requestname}</TableCell>
-        <TableCell>{row.role}</TableCell>
-
-        <TableCell>
-          <Label color={row.status === 'banned' ? 'error' : 'success'}>
-            {row.status}
-          </Label>
-        </TableCell>
+        <TableCell>{row.brand}</TableCell>
+        <TableCell>{row.total_amount.toLocaleString()}</TableCell>
+        <TableCell>{row.company_price.toLocaleString()}</TableCell>
+        <TableCell>{row.date_to_pay}</TableCell>
+        <TableCell>{row.company.name}</TableCell>
+        <TableCell>{row.super_dealer.name}</TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenPopover}>
@@ -109,58 +95,15 @@ export function RequestTableRow({
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuList
-          disablePadding
-          sx={{
-            p: 0.5,
-            gap: 0.5,
-            width: 160,
-            display: 'flex',
-            flexDirection: 'column',
-            [`& .${menuItemClasses.root}`]: {
-              px: 1,
-              gap: 2,
-              borderRadius: 0.75,
-              [`&.${menuItemClasses.selected}`]: { bgcolor: 'action.selected' },
-            },
-          }}
-        >
-          <MenuItem onClick={handleShowDetails}>
-            <Iconify icon="solar:eye-bold" />
-            Show
+        <MenuList sx={{ p: 1, width: 180 }}>
+          <MenuItem onClick={handleApprove}>
+            <Iconify icon="custom:approve" />
+            Approve
           </MenuItem>
 
-          <MenuItem onClick={() => {
-            handleClosePopover();
-            onEdit(row); // ✅ Triggers parent edit handler
-          }}>
-            <Iconify icon="solar:pen-bold" />
-            Edit
-          </MenuItem>
-
-          <MenuItem
-            onClick={() => {
-              handleClosePopover();
-              //onDelete(row.id); // ✅ Triggers parent delete handler
-            }}
-            sx={{ color: 'error.main' }}
-          >
-            <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete
-          </MenuItem>
-
-          <MenuItem disabled>
-            <Box
-              sx={{
-                width: 24,
-                height: 24,
-                borderRadius: '50%',
-                bgcolor: row.color,
-                border: '1px solid #ccc',
-              }}
-              title={`Company Color: ${row.color}`}
-            />
-            Color
+          <MenuItem onClick={handleFulfill}>
+            <Iconify icon="custom:fulfill" />
+            Fulfill
           </MenuItem>
         </MenuList>
       </Popover>

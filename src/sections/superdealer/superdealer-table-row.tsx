@@ -29,6 +29,7 @@ type SuperdealerTableRowProps = {
   row: SuperdealerProps;
   selected: boolean;
   onShowDetails: (superdealer: SuperdealerProps) => void;
+  onShowrequest: (superdealer: SuperdealerProps) => void;
   onSelectRow: () => void;
 };
 
@@ -37,6 +38,7 @@ export function SuperdealerTableRow({
   selected,
   onSelectRow,
   onShowDetails,
+  onShowrequest,
 }: SuperdealerTableRowProps) {
   const [openPopover, setOpenPopover] = useState<null | HTMLButtonElement>(null);
 
@@ -99,6 +101,11 @@ export function SuperdealerTableRow({
           <MenuItem onClick={() => onShowDetails(row)}>
           <Iconify icon="solar:eye-bold" />
             Show Details
+          </MenuItem>
+
+          <MenuItem onClick={() => onShowrequest(row)}>
+          <Iconify icon="solar:document-bold" />
+            request Details
           </MenuItem>
 
           <MenuItem onClick={handleClosePopover}>

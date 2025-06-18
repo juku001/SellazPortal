@@ -1,13 +1,14 @@
 import type { Breakpoint } from '@mui/material/styles';
 
 import { merge } from 'es-toolkit';
+import { useState, useEffect } from 'react';
 import { useBoolean } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
 
-import { _langs, _notifications } from 'src/_mock';
+import { _langs, fetchNotificationsFromAPI } from 'src/_mock';
 
 import { NavMobile, NavDesktop } from './nav';
 import { layoutClasses } from '../core/classes';
@@ -48,14 +49,37 @@ export function DashboardLayout({
   layoutQuery = 'lg',
 }: DashboardLayoutProps) {
   const theme = useTheme();
-
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
+
+  type NotificationItem = {
+    id: string;
+    title: string;
+    description: string;
+    avatarUrl: string | null;
+    type: string;
+    postedAt: string; // ✅ now always string
+    isUnRead: boolean;
+  };
+  
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  
+
+  // 🔄 Real-time polling for notifications
+  useEffect(() => {
+    const fetchAndUpdate = async () => {
+      const data = await fetchNotificationsFromAPI();
+      setNotifications(data);
+    };
+
+    fetchAndUpdate(); // initial fetch
+    const interval = setInterval(fetchAndUpdate, 10000); // every 10 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   const renderHeader = () => {
     const headerSlotProps: HeaderSectionProps['slotProps'] = {
-      container: {
-        maxWidth: false,
-      },
+      container: { maxWidth: false },
     };
 
     const headerSlots: HeaderSectionProps['slots'] = {
@@ -66,7 +90,6 @@ export function DashboardLayout({
       ),
       leftArea: (
         <>
-          {/** @slot Nav mobile */}
           <MenuButton
             onClick={onOpen}
             sx={{ mr: 1, ml: -1, [theme.breakpoints.up(layoutQuery)]: { display: 'none' } }}
@@ -76,16 +99,9 @@ export function DashboardLayout({
       ),
       rightArea: (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0, sm: 0.75 } }}>
-          {/** @slot Searchbar */}
           <Searchbar />
-
-          {/** @slot Language popover */}
           <LanguagePopover data={_langs} />
-
-          {/** @slot Notifications popover */}
-          <NotificationsPopover data={_notifications} />
-
-          {/** @slot Account drawer */}
+          <NotificationsPopover data={notifications as NotificationItem[]} />
           <AccountPopover data={_account} />
         </Box>
       ),
@@ -109,23 +125,11 @@ export function DashboardLayout({
 
   return (
     <LayoutSection
-      /** **************************************
-       * @Header
-       *************************************** */
       headerSection={renderHeader()}
-      /** **************************************
-       * @Sidebar
-       *************************************** */
       sidebarSection={
         <NavDesktop data={navData} layoutQuery={layoutQuery} workspaces={_workspaces} />
       }
-      /** **************************************
-       * @Footer
-       *************************************** */
       footerSection={renderFooter()}
-      /** **************************************
-       * @Styles
-       *************************************** */
       cssVars={{ ...dashboardLayoutVars(theme), ...cssVars }}
       sx={[
         {

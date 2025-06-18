@@ -45,7 +45,9 @@ export function SuperdealerView() {
   const [filterName, setFilterName] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
+  const [openRequestModal, setOpenRequestModal] = useState(false);
   const [selectedBikers, setSelectedBikers] = useState<any[]>([]);
+  const [selectedRequests, setSelectedRequests] = useState<any[]>([]);
   const [companySuperdealers, setCompanySuperdealers] = useState<SuperdealerProps[]>([]);
 
   const [formData, setFormData] = useState({
@@ -86,7 +88,19 @@ export function SuperdealerView() {
     }
   };
 
+  const handleOpenRequestModal = async (companyId: number) => {
+    try {
+      const response = await axios.get(`/orders/request/${companyId}`);
+      setSelectedBikers(response.data.data || []);
+      setOpenViewModal(true);
+    } catch (error) {
+      console.error('Failed to fetch requests:', error);
+    }
+  };
+
+
   const handleCloseViewModal = () => setOpenViewModal(false);
+  const handleCloseRequestModal = () => setOpenViewModal(false);
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent
@@ -194,6 +208,7 @@ export function SuperdealerView() {
                       selected={table.selected.includes(row.id)}
                       onSelectRow={() => table.onSelectRow(row.id)}
                       onShowDetails={(superdealer) => handleOpenViewModal(superdealer.id)}
+                      onShowrequest={(superdealer) =>handleOpenRequestModal(superdealer.company_id)}
 
                     />
                   ))}
@@ -272,6 +287,34 @@ export function SuperdealerView() {
               {!selectedBikers.length && (
                 <tr>
                   <td colSpan={3}>No bikers found for this superdealer.</td>
+                </tr>
+              )}
+            </TableBody>
+          </Table>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseViewModal}>Close</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openRequestModal} onClose={handleCloseRequestModal} fullWidth maxWidth="md">
+        <DialogTitle>Superdealer Request List</DialogTitle>
+        <DialogContent dividers>
+          <Table size="small">
+            <TableBody>
+              {selectedRequests.map((request, index) => (
+                <tr key={index}>
+                  <td>{request.name}</td>
+                  <td>{request.brand}</td>
+                  <td>{request.total_amount}</td>
+                  <td>{request.company_price}</td>
+                  <td>{request.date_to_pay}</td>
+
+                </tr>
+              ))}
+              {!selectedRequests.length && (
+                <tr>
+                  <td colSpan={3}>No requests found for this superdealer.</td>
                 </tr>
               )}
             </TableBody>

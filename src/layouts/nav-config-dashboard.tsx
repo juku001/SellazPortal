@@ -21,12 +21,12 @@ export const navData = [
   {
     title: 'Super Admin',
     path: '/dashboard/user', 
-    icon: icon('ic-user'),
+    icon: icon('users-solid'),
   },
   {
     title: 'Company',
     path: '/dashboard/company', 
-    icon: icon('ic-office-building'),
+    icon: icon('house-solid'),
     info: (
       <Label color="error" variant="inverted">
         +3
@@ -36,9 +36,9 @@ export const navData = [
   {
     title: 'Request',
     path: '/dashboard/request',
-    icon: icon('ic-request'),
+    icon: icon('file-solid'),
   },
-  {
+  /*{
     title: 'Sign in',
     path: '/',
     icon: icon('ic-lock'),
@@ -47,5 +47,5 @@ export const navData = [
     title: 'Not found',
     path: '/404',
     icon: icon('ic-disabled'),
-  },
+  },*/
 ];

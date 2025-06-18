@@ -13,6 +13,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import axios from 'src/utils/axios';
 
+import { Logo } from 'src/components/logo';
 import { Iconify } from 'src/components/iconify';
 
 export function SignInView() {
@@ -27,32 +28,28 @@ export function SignInView() {
   const handleSignIn = useCallback(async () => {
     setLoading(true);
     setError('');
-  
+
     try {
       const res = await axios.post('/login', { email, password });
-  
-      console.log('Login response:', res);
-  
+
       const token = res.data.data.token;
-  
+
       if (token) {
         localStorage.setItem('token', token);
-        console.log('Saved token:', localStorage.getItem('token'));
         router.push('/dashboard');
       } else {
         console.error('Token not found in response');
       }
     } catch (err: any) {
-      console.error('Login error:', err);
       setError(err.response?.data?.message || 'Login failed');
     } finally {
       setLoading(false);
     }
   }, [email, password, router]);
-  
 
   return (
     <>
+      {/* Logo at the top */}
       <Box
         sx={{
           gap: 1.5,
@@ -62,15 +59,11 @@ export function SignInView() {
           mb: 5,
         }}
       >
-        <Typography variant="h5">Sign in</Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Don’t have an account?
-          <Link variant="subtitle2" sx={{ ml: 0.5 }}>
-            Get started
-          </Link>
-        </Typography>
+         <Logo variant="default" />
+
       </Box>
 
+      {/* Form Section */}
       <Box sx={{ display: 'flex', alignItems: 'flex-end', flexDirection: 'column' }}>
         <TextField
           fullWidth
@@ -124,23 +117,8 @@ export function SignInView() {
         </Button>
       </Box>
 
-      <Divider sx={{ my: 3, '&::before, &::after': { borderTopStyle: 'dashed' } }}>
-        <Typography variant="overline" sx={{ color: 'text.secondary', fontWeight: 'fontWeightMedium' }}>
-          OR
-        </Typography>
-      </Divider>
-
-      <Box sx={{ gap: 1, display: 'flex', justifyContent: 'center' }}>
-        <IconButton color="inherit">
-          <Iconify width={22} icon="socials:google" />
-        </IconButton>
-        <IconButton color="inherit">
-          <Iconify width={22} icon="socials:github" />
-        </IconButton>
-        <IconButton color="inherit">
-          <Iconify width={22} icon="socials:twitter" />
-        </IconButton>
-      </Box>
+      {/* Divider only (no social icons below) */}
+      <Divider sx={{ my: 3, '&::before, &::after': { borderTopStyle: 'dashed' } }} />
     </>
   );
 }

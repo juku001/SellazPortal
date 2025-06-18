@@ -98,4 +98,23 @@ export default {
   'custom:menu-duotone': {
     body: '<path fill="currentColor" opacity="0.4" d="M15.7798 4.5H5.2202C4.27169 4.5 3.5 5.06057 3.5 5.75042C3.5 6.43943 4.27169 7 5.2202 7H15.7798C16.7283 7 17.5 6.43943 17.5 5.75042C17.5 5.06054 16.7283 4.5 15.7798 4.5Z" ></path> <path fill="currentColor" d="M18.7798 10.75H8.2202C7.27169 10.75 6.5 11.3106 6.5 12.0004C6.5 12.6894 7.27169 13.25 8.2202 13.25H18.7798C19.7283 13.25 20.5 12.6894 20.5 12.0004C20.5 11.3105 19.7283 10.75 18.7798 10.75Z" ></path> <path fill="currentColor" d="M15.7798 17H5.2202C4.27169 17 3.5 17.5606 3.5 18.2504C3.5 18.9394 4.27169 19.5 5.2202 19.5H15.7798C16.7283 19.5 17.5 18.9394 17.5 18.2504C17.5 17.5606 16.7283 17 15.7798 17Z" ></path>',
   },
+  'solar:building-bold': {
+    body: '<path fill="currentColor" d="M4 2h16v20H4V2zm4 4h2v2H8V6zm4 0h2v2h-2V6zm4 0h2v2h-2V6zM8 10h2v2H8v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zM8 14h2v2H8v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z"/>',
+  },
+  'solar:document-bold': {
+    body: '<path fill="currentColor" d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V7h4.5L13 3.5zM8 11h8v1.5H8V11zm0 3h8v1.5H8V14z"/>',
+  },
+  'solar:box-bold': {
+    body: '<path fill="currentColor" d="M3 8l9 5 9-5v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8zm9-5l9 5-9 5-9-5 9-5z"/>',
+  },
+  'solar:bike-bold': {
+    body: '<path fill="currentColor" d="M6 16a4 4 0 1 1 0-8a4 4 0 0 1 0 8zm0-1.5a2.5 2.5 0 1 0 0-5a2.5 2.5 0 0 0 0 5zM18 16a4 4 0 1 1 0-8a4 4 0 0 1 0 8zm0-1.5a2.5 2.5 0 1 0 0-5a2.5 2.5 0 0 0 0 5zM10.5 6h3l2.5 6h-3l-.5-1.5h-3l-.5 1.5h-3L10.5 6z"/>',
+  },
+  'custom:approve': {
+    body: '<path fill="currentColor" d="M12 2a10 10 0 1 1 0 20a10 10 0 0 1 0-20zm4.293 6.707l-5 5a1 1 0 0 1-1.414 0l-2-2a1 1 0 1 1 1.414-1.414L11 11.586l4.293-4.293a1 1 0 0 1 1.414 1.414z"/>',
+  },
+  'custom:fulfill': {
+    body: '<path fill="currentColor" d="M15 2H9a2 2 0 0 0-2 2v1H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V4a2 2 0 0 0-2-2zM9.707 13.707l5-5a1 1 0 1 0-1.414-1.414L9 11.586l-1.293-1.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0z"/>',
+  },
+
 };
