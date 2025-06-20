@@ -1,154 +1,152 @@
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
-import { DashboardContent } from 'src/layouts/dashboard';
-import { _posts, _tasks, _traffic, _timeline } from 'src/_mock';
+import axios from 'src/utils/axios';
 
-import { AnalyticsNews } from '../analytics-news';
-import { AnalyticsTasks } from '../analytics-tasks';
+import { DashboardContent } from 'src/layouts/dashboard';
+
 import { AnalyticsCurrentVisits } from '../analytics-current-visits';
-import { AnalyticsOrderTimeline } from '../analytics-order-timeline';
 import { AnalyticsWebsiteVisits } from '../analytics-website-visits';
 import { AnalyticsWidgetSummary } from '../analytics-widget-summary';
-import { AnalyticsTrafficBySite } from '../analytics-traffic-by-site';
-import { AnalyticsCurrentSubject } from '../analytics-current-subject';
-import { AnalyticsConversionRates } from '../analytics-conversion-rates';
-
-// ----------------------------------------------------------------------
 
 export function OverviewAnalyticsView() {
+  const { companyId } = useParams<{ companyId: string }>();
+  const [companyName, setCompanyName] = useState('Company');
+  const [productCount, setProductCount] = useState<number | null>(null);
+  const [superDealerCount, setSuperDealerCount] = useState<number | null>(null);
+  const [requestsPending, setRequestsPending] = useState<number | null>(null);
+  const [requestsApproved, setRequestsApproved] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!companyId) {
+      console.warn('No companyId found in URL');
+      return;
+    }
+
+    const loadData = async () => {
+      try {
+        const [productRes, dealerRes, requestRes, companyRes] = await Promise.all([
+          axios.get(`/companies/${companyId}/products`),
+          axios.get(`/companies/${companyId}/superdealers`),
+          axios.get(`/orders/requests/${companyId}`),
+          axios.get(`/companies/${companyId}`),
+        ]);
+
+        const products = productRes?.data?.data?.products || [];
+        const dealers = dealerRes?.data?.data?.super_dealers || [];
+        const requests = requestRes?.data?.data || [];
+        const company = companyRes?.data?.data;
+
+        setProductCount(products.length);
+        setSuperDealerCount(dealers.length);
+
+        setRequestsPending(requests.filter((r: any) => r.status === 'pending').length);
+        setRequestsApproved(requests.filter((r: any) => r.status === 'approved').length);
+
+        if (company?.name) {
+          setCompanyName(company.name);
+        }
+      } catch (error) {
+        console.error('Failed to load analytics data:', error);
+      }
+    };
+
+    loadData();
+  }, [companyId]);
+
   return (
     <DashboardContent maxWidth="xl">
       <Typography variant="h4" sx={{ mb: { xs: 3, md: 5 } }}>
-        Hi, Welcome back 👋
+       {companyName}
       </Typography>
 
       <Grid container spacing={3}>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }} component="div">
           <AnalyticsWidgetSummary
-            title="Weekly sales"
-            percent={2.6}
-            total={714000}
-            icon={<img alt="Weekly sales" src="/assets/icons/glass/ic-glass-bag.svg" />}
+            title="Products"
+            percent={0}
+            total={productCount ?? 0}
+            icon={<img alt="Products" src="/assets/icons/glass/ic-glass-bag.svg" />}
             chart={{
-              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-              series: [22, 8, 35, 50, 82, 84, 77, 12],
+              categories: Array.from({ length: 7 }, (_, i) => `Day ${i + 1}`),
+              series: Array(7).fill((productCount ?? 0) / 7),
             }}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }} component="div">
           <AnalyticsWidgetSummary
-            title="New users"
-            percent={-0.1}
-            total={1352831}
+            title="Super Dealers"
+            percent={0}
+            total={superDealerCount ?? 0}
             color="secondary"
-            icon={<img alt="New users" src="/assets/icons/glass/ic-glass-users.svg" />}
+            icon={<img alt="Super Dealers" src="/assets/icons/glass/ic-glass-users.svg" />}
             chart={{
-              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-              series: [56, 47, 40, 62, 73, 30, 23, 54],
+              categories: Array.from({ length: 7 }, (_, i) => `Day ${i + 1}`),
+              series: Array(7).fill((superDealerCount ?? 0) / 7),
             }}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }} component="div">
           <AnalyticsWidgetSummary
-            title="Purchase orders"
-            percent={2.8}
-            total={1723315}
+            title="Requests Pending"
+            percent={0}
+            total={requestsPending ?? 0}
             color="warning"
-            icon={<img alt="Purchase orders" src="/assets/icons/glass/ic-glass-buy.svg" />}
+            icon={<img alt="Pending" src="/assets/icons/glass/ic-glass-buy.svg" />}
             chart={{
-              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-              series: [40, 70, 50, 28, 70, 75, 7, 64],
+              categories: ['Pending'],
+              series: [requestsPending ?? 0],
             }}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }} component="div">
           <AnalyticsWidgetSummary
-            title="Messages"
-            percent={3.6}
-            total={234}
+            title="Requests Approved"
+            percent={0}
+            total={requestsApproved ?? 0}
             color="error"
-            icon={<img alt="Messages" src="/assets/icons/glass/ic-glass-message.svg" />}
+            icon={<img alt="Approved" src="/assets/icons/glass/ic-glass-message.svg" />}
             chart={{
-              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-              series: [56, 30, 23, 54, 47, 40, 62, 73],
+              categories: ['Approved'],
+              series: [requestsApproved ?? 0],
             }}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6, lg: 4 }}>
+        <Grid size={{ xs: 12, md: 6, lg: 4 }} component="div">
           <AnalyticsCurrentVisits
             title="Current visits"
             chart={{
               series: [
-                { label: 'America', value: 3500 },
-                { label: 'Asia', value: 2500 },
-                { label: 'Europe', value: 1500 },
-                { label: 'Africa', value: 500 },
+                { label: 'Products', value: productCount ?? 0 },
+                { label: 'Super Dealers', value: superDealerCount ?? 0 },
+                { label: 'Approved', value: requestsApproved ?? 0 },
+                { label: 'Pending', value: requestsPending ?? 0 },
               ],
             }}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6, lg: 8 }}>
+        <Grid size={{ xs: 12, md: 6, lg: 8 }} component="div">
           <AnalyticsWebsiteVisits
-            title="Website visits"
-            subheader="(+43%) than last year"
+            title="Request trends"
+            subheader="This month"
             chart={{
-              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+              categories: ['Pending', 'Approved'],
               series: [
-                { name: 'Team A', data: [43, 33, 22, 37, 67, 68, 37, 24, 55] },
-                { name: 'Team B', data: [51, 70, 47, 67, 40, 37, 24, 70, 24] },
+                {
+                  name: 'Requests',
+                  data: [requestsPending ?? 0, requestsApproved ?? 0],
+                },
               ],
             }}
           />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6, lg: 8 }}>
-          <AnalyticsConversionRates
-            title="Conversion rates"
-            subheader="(+43%) than last year"
-            chart={{
-              categories: ['Italy', 'Japan', 'China', 'Canada', 'France'],
-              series: [
-                { name: '2022', data: [44, 55, 41, 64, 22] },
-                { name: '2023', data: [53, 32, 33, 52, 13] },
-              ],
-            }}
-          />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-          <AnalyticsCurrentSubject
-            title="Current subject"
-            chart={{
-              categories: ['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math'],
-              series: [
-                { name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },
-                { name: 'Series 2', data: [20, 30, 40, 80, 20, 80] },
-                { name: 'Series 3', data: [44, 76, 78, 13, 43, 10] },
-              ],
-            }}
-          />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6, lg: 8 }}>
-          <AnalyticsNews title="News" list={_posts.slice(0, 5)} />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-          <AnalyticsOrderTimeline title="Order timeline" list={_timeline} />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-          <AnalyticsTrafficBySite title="Traffic by site" list={_traffic} />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6, lg: 8 }}>
-          <AnalyticsTasks title="Tasks" list={_tasks} />
         </Grid>
       </Grid>
     </DashboardContent>

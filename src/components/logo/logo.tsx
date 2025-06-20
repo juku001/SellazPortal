@@ -27,7 +27,7 @@ export function Logo({
   ...other
 }: LogoProps) {
   const imageSrc =
-    variant === 'dashboard' ? '/dashboard_logo.jpg' : '/full_logo.jpg';
+    variant === 'dashboard' ? '/dashboard_logo.jpg' : '/full_logo.png';
   const altText = variant === 'dashboard' ? 'Dashboard Logo' : 'Main Logo';
 
   return (

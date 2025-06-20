@@ -1,4 +1,3 @@
-import { Label } from 'src/components/label';
 import { SvgColor } from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -14,11 +13,7 @@ export type NavItem = {
 
 // Dynamically generates nav items based on companyId
 export const getCompanyNav = (companyId: string): NavItem[] => [
-  {
-    title: '← Back to Companies',
-    path: '/dashboard/company',
-    icon: icon('ic-back'),
-  },
+ 
   {
     title: 'Company Dashboard',
     path: `/company/${companyId}`,
@@ -27,26 +22,22 @@ export const getCompanyNav = (companyId: string): NavItem[] => [
   {
     title: 'Super Dealer',
     path: `/company/${companyId}/superdealers`,
-    icon: icon('ic-user'),
+    icon: icon('users-solid'),
   },
-  {
-    title: 'Biker',
-    path: `/company/${companyId}/bikers`,
-    icon: icon('ic-office-building'),
-    info: (
-      <Label color="error" variant="inverted">
-        +3
-      </Label>
-    ),
-  },
+  
   {
     title: 'Products',
     path: `/company/${companyId}/products`,
-    icon: icon('ic-user'),
+    icon: icon('store-solid'),
   },
   {
     title: 'Report',
     path: `/company/${companyId}/report`,
-    icon: icon('ic-request'),
+    icon: icon('file-solid'),
+  },
+  {
+    title: ' Back to Companies',
+    path: '/dashboard/company',
+    icon: icon('left-long-solid'),
   },
 ];

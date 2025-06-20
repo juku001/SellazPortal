@@ -88,9 +88,9 @@ export function SuperdealerView() {
     }
   };
 
-  const handleOpenRequestModal = async (companyId: number) => {
+  const handleOpenRequestModal = async (Id: number) => {
     try {
-      const response = await axios.get(`/orders/request/${companyId}`);
+      const response = await axios.get(`/orders/request/${Id}`);
       setSelectedBikers(response.data.data || []);
       setOpenViewModal(true);
     } catch (error) {

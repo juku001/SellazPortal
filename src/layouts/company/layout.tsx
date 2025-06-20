@@ -4,25 +4,17 @@ import { merge } from 'es-toolkit';
 import { useParams } from 'react-router-dom';
 import { useBoolean } from 'minimal-shared/hooks';
 
-import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
 
-import { _langs, _notifications } from 'src/_mock';
-
 import { NavMobile, NavDesktop } from './nav';
 import { layoutClasses } from '../core/classes';
-import { _account } from '../nav-config-account';
 import { dashboardLayoutVars } from './css-vars';
 import { MainSection } from '../core/main-section';
-import { Searchbar } from '../components/searchbar';
 import { MenuButton } from '../components/menu-button';
 import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
-import { AccountPopover } from '../components/account-popover';
 import { getCompanyNav } from '../company-nav-config-dashboard';
-import { LanguagePopover } from '../components/language-popover';
-import { NotificationsPopover } from '../components/notifications-popover';
 
 import type { MainSectionProps } from '../core/main-section';
 import type { HeaderSectionProps } from '../core/header-section';
@@ -75,14 +67,14 @@ export function CompanyLayout({
           <NavMobile data={navData} open={open} onClose={onClose} />
         </>
       ),
-      rightArea: (
+      /*rightArea: (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0, sm: 0.75 } }}>
           <Searchbar />
           <LanguagePopover data={_langs} />
           <NotificationsPopover data={_notifications} />
           <AccountPopover data={_account} />
         </Box>
-      ),
+      ),*/
     };
 
     return (

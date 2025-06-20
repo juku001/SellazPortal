@@ -24,11 +24,12 @@ import { Scrollbar } from 'src/components/scrollbar';
 
 import { TableNoData } from '../table-no-data';
 import { TableEmptyRows } from '../table-empty-rows';
+import { RequestTableRow } from '../request-table-row';
 import { RequestTableHead } from '../request-table-head';
 import { RequestToolbar } from '../request-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
-import type { RequestProps , RequestTableRow } from '../request-table-row';
+import type { RequestProps} from '../request-table-row';
 
 function useTable() {
   const [page, setPage] = useState(0);
